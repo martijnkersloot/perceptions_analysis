@@ -1,4 +1,3 @@
-date <- "20210112"
 file <- paste("data/Researcher_s_perceptions_of_the__Questionnaire_export_", date, ".csv", sep="")
 
 library(readr)

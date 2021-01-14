@@ -87,7 +87,7 @@ data_demographics$fair_knowledge <- NA
 data_demographics$fair_knowledge[data_raw$heard_of_fair == 0] <- 0
 data_demographics$fair_knowledge[data_raw$know_fair_definition == 0] <- 0
 
-# Yes if: Know definition/description
+# Yes if: Heard of FAIR & Know definition/description
 data_demographics$fair_knowledge[data_raw$heard_of_fair == 1 & data_raw$know_fair_definition == 1] <- 1
 
 
@@ -98,28 +98,10 @@ data_demographics$fair_knowledge <- factor(
              "No knowledge of FAIR")
 )
 
-data_demographics <- subset(data_demographics, !is.na(data_demographics$fair_knowledge))
-
-
 attr(data_demographics$age, "label") <- "Age"
 attr(data_demographics$profession, "label") <- "Profession"
 attr(data_demographics$primary_institution, "label") <- "Primary Institution"
 attr(data_demographics$research_experience, "label") <- "Research experience"
 attr(data_demographics$fair_knowledge, "label") <- "Knowledge of FAIR"
 
-
-res <- compareGroups(
-  fair_knowledge ~ age + primary_institution + profession + research_experience,
-  data_demographics
-)
-
-restab <- createTable(
-  res,
-  show.all = TRUE,
-  show.p.overall = FALSE,
-  all.last = TRUE
-)
-
-export2md(restab, header.labels = c(all = "All"))
-
-# descrTable(data_demographics)
+data_demographics_no_na <- subset(data_demographics, !is.na(data_demographics$fair_knowledge))

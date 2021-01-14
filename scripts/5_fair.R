@@ -1,9 +1,21 @@
 library(likert)
 
-data_fair <- data_raw[,2]
+data_fair <- data_demographics[,1]
+data_fair$knowledge = data_demographics$fair_knowledge
 
-# effort
+data_fair$effort_fair <- (data_raw$effort_f + data_raw$effort_a + data_raw$effort_i + data_raw$effort_r) > 0
 
+# Effort
+data_fair$effort_fair <- factor(
+  data_fair$effort_fair,
+  levels = c(FALSE, TRUE),
+  labels = c(
+    "No",
+    "Yes"
+  )
+)
+
+# Effort
 data_fair$effort_f <- factor(
   data_raw$effort_f,
   levels = c(0, 1, 2, 3),
@@ -52,7 +64,60 @@ data_fair$effort_r <- factor(
   ordered = TRUE
 )
 
-data_fair_effort <- as.data.frame(data_fair[complete.cases(data_fair), ])
+data_fair$letter_f <- tolower(trim(data_raw$fair_word_individual_f))
+data_fair$letter_a <- tolower(trim(data_raw$fair_word_individual_a))
+data_fair$letter_i <- tolower(trim(data_raw$fair_word_individual_i))
+data_fair$letter_r <- tolower(trim(data_raw$fair_word_individual_r))
+
+data_fair$letter_f_correct <- NA 
+data_fair$letter_a_correct <- NA 
+data_fair$letter_i_correct <- NA 
+data_fair$letter_r_correct <- NA 
+
+data_fair[!is.na(data_fair$letter_f),]$letter_f_correct <- data_fair[!is.na(data_fair$letter_f),]$letter_f %in% c(
+  "findable",
+  "find",
+  "findability",
+  "finding",
+  "finable",
+  "findable, ,"
+)
+
+data_fair[!is.na(data_fair$letter_a),]$letter_a_correct <- data_fair[!is.na(data_fair$letter_a),]$letter_a %in% c(
+  "accessible",
+  "accesible",
+  "accessibility",
+  "accessable",
+  "accesability",
+  "accesable",
+  "accessabil",
+  "accesinle",
+  "assessible" 
+)
+
+data_fair[!is.na(data_fair$letter_i),]$letter_i_correct <- data_fair[!is.na(data_fair$letter_i),]$letter_i %in% c(
+  "interoperable",
+  "interoperability",
+  "interopable",
+  "interoperable or something"
+)
+
+data_fair[!is.na(data_fair$letter_r),]$letter_r_correct <- data_fair[!is.na(data_fair$letter_r),]$letter_r %in% c(
+  "reausable",
+  "reusable",
+  "reusing",
+  "re usable",
+  "reusability",
+  "reuse",
+  "re-useable",
+  "reuseable",
+  "re-use ...",
+  "reus",
+  "reuasable"
+)
+
+data_fair_effort <- data_fair[, c(1, 3:7)]
+data_fair_effort <- as.data.frame(data_fair_effort[complete.cases(data_fair_effort), ])
 
 row.names(data_fair_effort) <- data_fair_effort$`Castor Record ID`
 data_fair_effort[1] <- NULL
@@ -82,93 +147,6 @@ data_fair_effort_table$rounded <- abs(round(data_fair_effort_table$percentage))
 
 # Make percentages negative for 'No'
 data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"] = -data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"]
-
-# ggplot(data_fair_effort_table,
-#        aes(
-#          fill = effort,
-#          y = percentage,
-#          x = reverse.levels(aspect)
-#        )) +
-#   geom_bar(position = position_stack(reverse = TRUE),
-#            stat = "identity",
-#            width = 0.5) +
-#   coord_flip() +
-#   scale_y_continuous(
-#     breaks = seq(-100, 100, 10),
-#     limits = c(-60, 60),
-#     labels = abs(seq(-100, 100, 10))
-#   ) +
-#   labs(title = "Effort spent in making research data FAIR, per FAIR aspect\n", x = "FAIR aspect\n", y = "\nPercentage (%)") +
-#   theme_minimal() +
-#   geom_hline(yintercept = 0) +
-#   theme(legend.position = "bottom",
-#             legend.box = "vertical",
-#         axis.title.y=element_blank()
-#   ) + 
-#   geom_text(aes(label = paste0(rounded, "%"),
-#             position = position_stack(vjust = 0.5), size = 2),
-#     labels = c("No effort", "Very little effort", "Some effort", "A lot of effort"),
-#     color="white")
-
-
-ggplot(data_fair_effort_table,
-       aes(
-         fill = effort,
-         y = percentage,
-         x = reverse.levels(aspect)
-       )) +
-  geom_bar(position = position_stack(reverse = TRUE),
-           stat = "identity",
-           width = 0.5) +
-  coord_flip() +
-  scale_y_continuous(
-    breaks = seq(-100, 100, 10),
-    limits = c(-60, 60),
-    labels = abs(seq(-100, 100, 10))
-  ) +
-  labs(title = "Effort spent in making research data FAIR, per FAIR aspect\n", x = "FAIR aspect\n", y = "\nPercentage (%)") +
-  theme_minimal() +
-  geom_hline(yintercept = 0) +
-  scale_fill_manual(
-    name = "Effort",
-    values = c("#ca0020", "#c1c1c1", "#92c5de", "#0571b0"),
-    labels = c("No effort", "Very little effort", "Some effort", "A lot of effort")
-  ) +
-  theme(
-    legend.position = "bottom",
-    legend.box = "vertical",
-    axis.title.y = element_blank(),
-    legend.title=element_blank()
-  ) +
-  geom_text(
-    aes(label = paste0(rounded, "%")),
-    position = position_stack(vjust = 0.5, reverse = TRUE),
-    size = 2.5,
-    color = "white"
-  )
-
-
-
-  # geom_hline(yintercept=seq(-60, 60, 10), color="white", size=0.1)
-
-
-#data_fair_effort_likert <- likert(data_fair_effort)
-
-# ggplot(data_fair_effort, aes(fill=condition, y=value, x=specie)) + 
-#   geom_bar(position="stack", stat="identity")
-
-
-
-# plot(data_fair_effort_likert,
-#      type="heat",
-#      low.color = "white",
-#      high.color = "blue",
-#      text.color = "black",
-#      text.size = 4,
-#      wrap = 50)
-
-
-
 
 #heard_of_fair
 table(data_raw$heard_of_fair)

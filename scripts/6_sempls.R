@@ -1,5 +1,6 @@
 library(semPLS)
 library(DiagrammeR)
+library(dplyr)
 
 structural_model <- rbind(
   c("compatibility", "attitude"), 
@@ -87,57 +88,79 @@ measurement_model <- rbind(
 
 colnames(measurement_model) <- c("source", "target")
 
-ECSI <- plsm(data = completed_survey_data, strucmod = structural_model, measuremod = measurement_model)
-ecsi <- sempls(model = ECSI, data = completed_survey_data, wscheme = "centroid")
+data_completed <- as.data.frame(subset(data_raw, data_raw$`Survey Progress` == 100))
+
+perceptions_model <- plsm(data = data_completed, strucmod = structural_model, measuremod = measurement_model)
+
+
+# Fix experienced thing
+perceptions_fit <- sempls(model = perceptions_model, data = data_completed, wscheme = "centroid")
 
 
 # indicator reliability | Outer loadings | > 0.708
-ecsi$outer_loadings
+perceptions_fit$outer_loadings
 
 # convergent validity | Average Variance Extracted (AVE) | > 0.5
-communality(ecsi)
+communality(perceptions_fit)
 
 
 # internal consistency | rho | > 0.60
-dgrho(ecsi)
+dgrho(perceptions_fit)
 
 
 # Discriminant Validity (cross loading)
-plsLoadings(ecsi)
+plsLoadings(perceptions_fit)
 
-plsWeights(ecsi)
-plsLoadings(ecsi)
+plsWeights(perceptions_fit)
+plsLoadings(perceptions_fit)
 
-mvpairs(model = ecsi, data = completed_survey_data, LVs = "behavior")
+#mvpairs(model = perceptions_model, data = data_completed, LVs = "behavior")
 
-#bootsempls(object = ECSI, nboot = 500, start = "ones", verbose = FALSE)
-
-pathDiagram(ecsi, 
-            file = "ecsiStructure", 
+pathDiagram(perceptions_fit, 
+            file = "exports/model-full", 
             full = TRUE, 
             edge.labels = "both", 
             output.type = "graphics", 
             digits = 2, 
             graphics.fmt = "pdf"
-            )
+)
 
-grViz("ecsiStructure.dot")
+grViz("exports/model-full.dot")
+
+pathDiagram(perceptions_fit, 
+            file = "exports/model", 
+            full = FALSE, 
+            edge.labels = "both", 
+            output.type = "graphics", 
+            digits = 2, 
+            graphics.fmt = "pdf"
+)
+
+grViz("exports/model.dot")
 
 
-
-
-rSquared(ecsi)
-
-
-redundancy(ecsi)
-
-
-gof(ecsi)
-
-
+# Bootstrapping
 set.seed(123)
-ecsiBoot <- bootsempls(ecsi, nboot = 500, start = "ones", verbose = FALSE)
-ecsiBoot
+perceptions_bootstrapped <- bootsempls(perceptions_fit, nboot = 500, start = "ones", verbose = FALSE)
+perceptions_bootstrapped
 
-ecsiBootSummary <- summary(ecsiBoot, type = "bca", level = 0.95)
-ecsiBootSummary
+#adjusted bootstrap percentile (BCa)
+perceptions_bootstrapped_summary <- summary(perceptions_bootstrapped, type = "bca", level = 0.95)
+perceptions_bootstrapped_summary
+
+
+perceptions_bootstrapped_outcomes <- perceptions_bootstrapped_summary$table
+perceptions_bootstrapped_outcomes$path <- attr(perceptions_bootstrapped$t, "path")
+perceptions_bootstrapped_outcomes$significant <- perceptions_bootstrapped_outcomes$Lower * perceptions_bootstrapped_outcomes$Upper >= 0
+
+# R Squared
+rSquared(perceptions_fit)
+
+# 
+redundancy(perceptions_fit)
+# 
+# 
+gof(perceptions_fit)
+# 
+# 
+

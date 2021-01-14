@@ -137,7 +137,8 @@ ggplot(data_fair_effort_table,
   theme(
     legend.position = "bottom",
     legend.box = "vertical",
-    axis.title.y = element_blank()
+    axis.title.y = element_blank(),
+    legend.title=element_blank()
   ) +
   geom_text(
     aes(label = paste0(rounded, "%")),

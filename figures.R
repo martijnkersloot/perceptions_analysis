@@ -1,5 +1,4 @@
 # Plots
-export2md(restab, header.labels = c(all = "All"))
 
 ggplot(completed_per_umc, aes(x=Var1, y=Freq)) +
   geom_bar(stat = "identity", color = "black", fill = "grey") +
@@ -51,3 +50,8 @@ ggplot(data_fair_effort_table,
     size = 2.5,
     color = "white"
   )
+
+
+
+grViz("exports/model-full.dot")
+grViz("exports/model.dot")

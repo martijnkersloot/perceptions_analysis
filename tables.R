@@ -1,3 +1,6 @@
+library(kableExtra)
+library(reshape)
+library(rapportools)
 
 # Table 1: Demographics
 res <- compareGroups(
@@ -13,3 +16,14 @@ restab <- createTable(
 )
 
 export2md(restab, header.labels = c(all = "All"))
+
+
+
+# Table 2: Data sharing
+
+export2md(rbind(
+  "Shares research data" = table4_shares,
+  "Data sharing methods" = table4_method,
+  "Data sharing with" = table4_with
+))
+

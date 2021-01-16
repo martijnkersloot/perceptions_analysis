@@ -88,6 +88,31 @@ measurement_model <- rbind(
 
 colnames(measurement_model) <- c("source", "target")
 
+structural_model_names <- as.data.frame(rbind(
+  c("compatibility", "Compatibility"), 
+  c("awareness", "Awareness"), 
+  c("experienced_usefulness", "Experienced usefulness"), 
+  c("perceived_usefulness", "Perceived usefulness"), 
+  c("perceived_ease_of_use", "Perceived ease of use"), 
+  c("attitude", "Attitude"), 
+  c("interpersonal_influence", "Interpersonal influence"), 
+  c("external_influence", "External influence"), 
+  c("subjective_norm", "Subjective norm"), 
+  c("self_efficacy", "Self-efficacy"), 
+  c("facilitating_conditions", "Facilitating conditions"), 
+  c("perceived_behavioural_control", "Perceived behavioural control"), 
+  c("situational_normality", "Situational normality"), 
+  c("structural_assurance", "Structural assurance"), 
+  c("institutional_trust", "Institutional trust"), 
+  c("perceived_risk", "Perceived risk"), 
+  c("intention_to_act", "Intention to act"), 
+  c("behavior", "Behavior")
+))
+
+colnames(structural_model_names) <- c("short", "full")
+row.names(structural_model_names) <- structural_model_names$short
+structural_model_names[1] <- NULL
+
 data_completed <- as.data.frame(subset(data_raw, data_raw$`Survey Progress` == 100))
 
 perceptions_model <- plsm(data = data_completed, strucmod = structural_model, measuremod = measurement_model)
@@ -107,10 +132,6 @@ communality(perceptions_fit)
 # internal consistency | rho | > 0.60
 dgrho(perceptions_fit)
 
-
-# Discriminant Validity (cross loading)
-plsLoadings(perceptions_fit)
-
 plsWeights(perceptions_fit)
 plsLoadings(perceptions_fit)
 
@@ -125,8 +146,6 @@ pathDiagram(perceptions_fit,
             graphics.fmt = "pdf"
 )
 
-grViz("exports/model-full.dot")
-
 pathDiagram(perceptions_fit, 
             file = "exports/model", 
             full = FALSE, 
@@ -136,7 +155,6 @@ pathDiagram(perceptions_fit,
             graphics.fmt = "pdf"
 )
 
-grViz("exports/model.dot")
 
 
 # Bootstrapping
@@ -163,4 +181,3 @@ redundancy(perceptions_fit)
 gof(perceptions_fit)
 # 
 # 
-

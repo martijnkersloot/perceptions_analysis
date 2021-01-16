@@ -200,12 +200,6 @@ table4_with <- descrTable(
   hide.no = "No"
 )
 
-export2md(rbind(
-  "Shares research data" = table4_shares,
-  "Data sharing methods" = table4_method,
-  "Data sharing with" = table4_with
-))
-
 
 # share_methods_other
 table(data_sharing$method_other_text)

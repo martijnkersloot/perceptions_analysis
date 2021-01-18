@@ -34,9 +34,10 @@ data_demographics$primary_institution <- factor(
   )
 )
 
+# Introduce new level: "Data manager"
 data_demographics$profession <- factor(
   data_raw$profession_academia,
-  levels = c(1, 2, 3, 4, 5, 6, 7, 8, 0),
+  levels = c(1, 2, 3, 4, 5, 6, 7, 8, 0, 20),
   labels = c(
     "Data Steward",
     "Research nurse",
@@ -46,7 +47,8 @@ data_demographics$profession <- factor(
     "Associate professor",
     "Professor",
     "Other academic staff",
-    "Other"
+    "Other",
+    "Other: Data Manager"
   )
 )
 
@@ -104,4 +106,45 @@ attr(data_demographics$primary_institution, "label") <- "Primary Institution"
 attr(data_demographics$research_experience, "label") <- "Research experience"
 attr(data_demographics$fair_knowledge, "label") <- "Knowledge of FAIR"
 
+
+
+data_demographics$profession_other <-
+  apply(data_raw[, c("profession_academia_other", "profession_nonacademia")],
+        1,
+        function(x) {
+          x[!is.na(x)][1]
+        })
+
+data_demographics_data_managers <- grepl("datamanager", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_phd <- grepl("phd", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_consultant <- grepl("consultant", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_support <- grepl("researchsupport", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_coordinator <- grepl("coordinator", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_assistant <- grepl("research-assistant", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_junior <- grepl("juniorresearcher", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+data_demographics_manager <- grepl("trialmanager", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+
+data_demographics$profession[data_demographics_data_managers] <- "Other: Data Manager"
+data_demographics$profession[data_demographics_phd] <- "PhD candidate"
+
+profession_group_support <- c("Data Steward", "Other: Data Manager")
+profession_group_researcher <- c("PhD candidate", "Post-doc", "Assistant professor", "Associate professor", "Professor")
+#data_demographics$profession_group <- 
+
+data_demographics$profession_group <- NA
+data_demographics$profession_group[data_demographics$profession %in% profession_group_support] <- "Support"
+data_demographics$profession_group[data_demographics$profession %in% profession_group_researcher] <- "Researcher"
+data_demographics$profession_group[data_demographics_junior] <- "Researcher"
+data_demographics$profession_group[data_demographics_consultant] <- "Support"
+data_demographics$profession_group[data_demographics_coordinator] <- "Support"
+data_demographics$profession_group[data_demographics_assistant] <- "Support"
+data_demographics$profession_group[data_demographics_support] <- "Support"
+data_demographics$profession_group[data_demographics_manager] <- "Support"
+data_demographics$profession_group[!is.na(data_demographics$profession) & is.na(data_demographics$profession_group)] <- "Other" 
+data_demographics$profession_group[!is.na(data_demographics$profession_other) & is.na(data_demographics$profession_group)] <- "Other" 
+
+data_demographics$profession_group <- factor(data_demographics$profession_group)
+attr(data_demographics$profession_group, "label") <- "Profession group"
+
 data_demographics_no_na <- subset(data_demographics, !is.na(data_demographics$fair_knowledge))
+

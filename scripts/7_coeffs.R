@@ -21,7 +21,8 @@ perceptions_fit_path_coefs <- data.frame(from=character(),
                                p=numeric()) 
 
 for (i in 1:length(perceptions_model$inner_model)) {
-  to_name <- name(perceptions_model$inner_model[i])
+  #to_name <- name(perceptions_model$inner_model[i])
+  to_name <- attr(perceptions_model$inner_model[i], "name")
   to <- as.data.frame(perceptions_model$inner_model[i])
   
   
@@ -49,8 +50,8 @@ perceptions_fit_path_coefs$p_star <- symnum(
   perceptions_fit_path_coefs$p,
   corr = FALSE,
   na = FALSE,
-  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-  symbols = c("***", "**", "*", ".", " ")
+  cutpoints = c(0, 0.001, 0.01, 0.05, 1),
+  symbols = c("***", "**", "*", " ")
 )
 
 perceptions_fit_path_coefs$p <- scales::pvalue(as.numeric(perceptions_fit_path_coefs$p))

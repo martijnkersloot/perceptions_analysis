@@ -2,3 +2,4 @@
 data/
 scripts/.DS_Store
 exports/
+.Rproj.user

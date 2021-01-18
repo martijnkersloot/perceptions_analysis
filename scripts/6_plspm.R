@@ -65,13 +65,17 @@ perceptions_structural_model_names <- as.data.frame(rbind(
 ))
 
 colnames(perceptions_structural_model_names) <- c("short", "full")
-row.names(perceptions_structural_model_names) <- structural_model_names$short
+row.names(perceptions_structural_model_names) <- perceptions_structural_model_names$short
 perceptions_structural_model_names[1] <- NULL
 
 data_plspm <- data_raw
 data_plspm$fair_knowledge <- data_demographics$fair_knowledge
+data_plspm$profession_group <- data_demographics$profession_group
 #data_completed <- as.data.frame(subset(data_raw, data_raw$`Survey Progress` == 100))
 data_plspm <- as.data.frame(subset(data_plspm, data_raw$`Survey Progress` == 100))
+
+# Only include researchers & support
+data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group != "Other"))
 
 
 #data_plspm <- data_completed
@@ -103,8 +107,32 @@ measurement_model <- list(
   generate_block("behavior", 4)
 )
 
+# measurement_model <- list(
+#   generate_block("awareness", 4),
+#   generate_block("compatibility", 1),
+#   generate_block("experiencedusefulness", 6),
+#   generate_block("externalinfluence", 2),
+#   generate_block("facilitatingconditions", 3), # Facilitating4 meer betrekking op Structural Assurance
+#   generate_block("interpersonalinfluence", 4),
+#   generate_block("perceivedeaseofuse", 1),
+#   generate_block("perceivedrisk", 2),
+#   generate_block("perceivedusefulness", 6),
+#   generate_block("selfefficacy", 10),
+#   generate_block("situationalnormality", 1),
+#   append(generate_block("structuralassurance", 4), c("facilitatingconditions_4")),
+#   generate_block("subjectivenorm", 1),
+#   generate_block("perceivedbehavioralcontrol", 1),
+#   generate_block("attitude", 4),
+#   generate_block("intentiontoact", 4),
+#   generate_block("behavior", 4)
+# )
+
 # Path matrix
 perceptions_model <- plspm(data_plspm, perceptions_path_matrix, measurement_model)
 
 summary(perceptions_model)
 
+data_plspm$profession_group <- factor(data_plspm$profession_group)
+plspm.groups(perceptions_model, data_plspm$profession_group)
+
+#perceptions_model <- plspm(data_plspm, perceptions_path_matrix, measurement_model, boot.val = TRUE, br = 200)

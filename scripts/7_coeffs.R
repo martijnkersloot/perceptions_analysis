@@ -21,7 +21,6 @@ perceptions_fit_path_coefs <- data.frame(from=character(),
                                p=numeric()) 
 
 for (i in 1:length(perceptions_model$inner_model)) {
-  #to_name <- name(perceptions_model$inner_model[i])
   to_name <- attr(perceptions_model$inner_model[i], "name")
   to <- as.data.frame(perceptions_model$inner_model[i])
   
@@ -56,5 +55,4 @@ perceptions_fit_path_coefs$p_star <- symnum(
 
 perceptions_fit_path_coefs$p <- scales::pvalue(as.numeric(perceptions_fit_path_coefs$p))
 
-
-#psycho::format_p(as.numeric(perceptions_fit_path_coefs$p))
+rm(to_name, to, from, from_name, coeff, p, i, j)

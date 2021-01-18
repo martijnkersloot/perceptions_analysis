@@ -50,8 +50,3 @@ ggplot(data_fair_effort_table,
     size = 2.5,
     color = "white"
   )
-
-
-
-grViz("exports/model-full.dot")
-grViz("exports/model.dot")

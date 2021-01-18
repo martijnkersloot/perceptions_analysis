@@ -111,3 +111,6 @@ summary(perceptions_model)
 
 data_plspm$profession_group <- factor(data_plspm$profession_group)
 plspm.groups(perceptions_model, data_plspm$profession_group)
+
+
+rm(generate_block, perceptions_path_matrix)

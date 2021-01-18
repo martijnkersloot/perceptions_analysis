@@ -129,7 +129,6 @@ data_demographics$profession[data_demographics_phd] <- "PhD candidate"
 
 profession_group_support <- c("Data Steward", "Other: Data Manager")
 profession_group_researcher <- c("PhD candidate", "Post-doc", "Assistant professor", "Associate professor", "Professor")
-#data_demographics$profession_group <- 
 
 data_demographics$profession_group <- NA
 data_demographics$profession_group[data_demographics$profession %in% profession_group_support] <- "Support"
@@ -142,6 +141,21 @@ data_demographics$profession_group[data_demographics_support] <- "Support"
 data_demographics$profession_group[data_demographics_manager] <- "Support"
 data_demographics$profession_group[!is.na(data_demographics$profession) & is.na(data_demographics$profession_group)] <- "Other" 
 data_demographics$profession_group[!is.na(data_demographics$profession_other) & is.na(data_demographics$profession_group)] <- "Other" 
+
+
+rm(
+  data_demographics_data_managers,
+  data_demographics_phd,
+  data_demographics_consultant,
+  data_demographics_support,
+  data_demographics_coordinator,
+  data_demographics_assistant,
+  data_demographics_junior,
+  data_demographics_manager,
+  profession_group_support,
+  profession_group_researcher
+)
+
 
 data_demographics$profession_group <- factor(data_demographics$profession_group)
 attr(data_demographics$profession_group, "label") <- "Profession group"

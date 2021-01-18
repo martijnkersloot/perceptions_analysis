@@ -17,7 +17,7 @@ restab <- createTable(
 
 export2md(restab, header.labels = c(all = "All"))
 
-
+rm(res, restab)
 
 # Table 2: Data sharing
 

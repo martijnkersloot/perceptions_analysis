@@ -164,15 +164,4 @@ unique(data_raw$fair_definition)
 
 
 
-
-
-
-
-## RDM
-
-#policy_aware
-table(data_raw$policy_aware)
-
-table(data_raw$policy_contact)
-
-table(data_raw$policy_fair)
+rm(trim)

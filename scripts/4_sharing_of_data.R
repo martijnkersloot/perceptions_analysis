@@ -172,35 +172,6 @@ attr(data_sharing$with_not_personally, "label") <- "Researchers not working on t
 attr(data_sharing$with_project_partners, "label") <- "Research project partners"
 attr(data_sharing$with_other, "label") <- "Other"
 
-table4_shares <- descrTable( ~ shared,
-                             data_sharing,
-                             hide.no = "No")
-
-table4_method <- descrTable(
-  ~  method_usb_flash_drive +
-    method_email +
-    method_standalone +
-    method_data_repository_organization +
-    method_data_repository_external +
-    method_appendix +
-    method_network_drive +
-    method_cloud_storage +
-    method_other,
-  data_sharing,
-  hide.no = "No"
-)
-
-table4_with <- descrTable(
-  ~  with_same_project +
-    with_personally +
-    with_not_personally +
-    with_project_partners +
-    with_other,
-  data_sharing,
-  hide.no = "No"
-)
-
-
 # share_methods_other
 table(data_sharing$method_other_text)
 

@@ -1,5 +1,9 @@
 date <- "20210118"
 
+library(kableExtra)
+library(reshape)
+library(rapportools)
+
 source('scripts/0_helpers.R')
 source('scripts/1_load_data.R')
 source('scripts/2_progress.R')

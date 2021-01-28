@@ -93,6 +93,9 @@ data_demographics$fair_knowledge[data_raw$know_fair_definition == 0] <- 0
 data_demographics$fair_knowledge[data_raw$heard_of_fair == 1 & data_raw$know_fair_definition == 1] <- 1
 
 
+data_demographics$fair_knowledge[data_raw$heard_of_fair == 99 & data_raw$know_fair_definition == 1] <- 1
+
+
 data_demographics$fair_knowledge <- factor(
   data_demographics$fair_knowledge,
   levels = c(1, 0),
@@ -157,7 +160,7 @@ rm(
 )
 
 
-data_demographics$profession_group <- factor(data_demographics$profession_group)
+data_demographics$profession_group <- factor(data_demographics$profession_group, levels = c("Researcher", "Support", "Other"))
 attr(data_demographics$profession_group, "label") <- "Profession group"
 
 data_demographics_no_na <- subset(data_demographics, !is.na(data_demographics$fair_knowledge))

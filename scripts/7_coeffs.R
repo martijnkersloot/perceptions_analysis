@@ -42,7 +42,7 @@ colnames(perceptions_fit_path_coefs) <- c("from", "to", "coefficient", "p")
 
 #options(scipen = 9999)
 
-perceptions_fit_path_coefs$coefficient <- format(as.numeric(perceptions_fit_path_coefs$coefficient), digits = 3)
+perceptions_fit_path_coefs$coefficient <- format(as.numeric(perceptions_fit_path_coefs$coefficient), digits = 2)
 perceptions_fit_path_coefs$p <- as.numeric(perceptions_fit_path_coefs$p)
 
 perceptions_fit_path_coefs$p_star <- symnum(
@@ -54,5 +54,7 @@ perceptions_fit_path_coefs$p_star <- symnum(
 )
 
 perceptions_fit_path_coefs$p <- scales::pvalue(as.numeric(perceptions_fit_path_coefs$p))
+
+perceptions_fit_path_coefs$copy <- paste(perceptions_fit_path_coefs$coefficient, perceptions_fit_path_coefs$p_star, sep="")
 
 rm(to_name, to, from, from_name, coeff, p, i, j)

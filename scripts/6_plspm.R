@@ -1,5 +1,25 @@
 library(plspm)
 
+perceptions_path_edgelist <- rbind(
+  c("attitude", "intention_to_act"),
+  c("awareness", "perceived_usefulness"),
+  c("compatibility", "attitude"),
+  c("experienced_usefulness", "perceived_usefulness"),
+  c("external_influence", "subjective_norm"),
+  c("facilitating_conditions", "perceived_behavioral_control"),
+  c("intention_to_act", "behavior"),
+  c("interpersonal_influence", "subjective_norm"),
+  c("perceived_behavioral_control", "intention_to_act"),
+  c("perceived_ease_of_use", "perceived_usefulness"),
+  c("perceived_ease_of_use", "attitude"),
+  c("perceived_risk", "intention_to_act"),
+  c("perceived_usefulness", "attitude"),
+  c("self_efficacy", "perceived_behavioral_control"),
+  c("situational_normality", "intention_to_act"),
+  c("structural_assurance", "intention_to_act"),
+  c("subjective_norm", "intention_to_act")
+)
+
 # Outer model / blocks
 perceptions_path_matrix <- rbind(
   c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -55,10 +75,9 @@ perceptions_structural_model_names <- as.data.frame(rbind(
   c("subjective_norm", "Subjective norm"),
   c("self_efficacy", "Self-efficacy"),
   c("facilitating_conditions", "Facilitating conditions"),
-  c("perceived_behavioural_control", "Perceived behavioural control"),
+  c("perceived_behavioral_control", "Perceived behavioral control"),
   c("situational_normality", "Situational normality"),
   c("structural_assurance", "Structural assurance"),
-  c("institutional_trust", "Institutional trust"),
   c("perceived_risk", "Perceived risk"),
   c("intention_to_act", "Intention to act"),
   c("behavior", "Behavior")
@@ -86,16 +105,26 @@ measurement_model <- list(
   generate_block("attitude", 4),
   generate_block("intentiontoact", 4),
   generate_block("behavior", 4)
+  # c(generate_block("behavior", 4), "effort_f", "effort_a", "effort_i", "effort_r")
 )
 
 data_plspm <- data_raw[, c("Castor Record ID", unlist(measurement_model))]
 
 data_plspm$fair_knowledge <- data_demographics$fair_knowledge
 data_plspm$profession_group <- data_demographics$profession_group
+
+# data_plspm$effort_f <- data_raw$effort_f
+# data_plspm$effort_a <- data_raw$effort_a
+# data_plspm$effort_i <- data_raw$effort_i
+# data_plspm$effort_r <- data_raw$effort_r
+
+
 data_plspm <- as.data.frame(subset(data_plspm, data_raw$`Survey Progress` == 100))
 
 # Only include researchers & support
 data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group != "Other"))
+
+data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group == "Researcher"))
 
 data_plspm$experiencedusefulness_1[is.na(data_plspm$experiencedusefulness_1)] <- 0
 data_plspm$experiencedusefulness_2[is.na(data_plspm$experiencedusefulness_2)] <- 0
@@ -113,4 +142,4 @@ data_plspm$profession_group <- factor(data_plspm$profession_group)
 plspm.groups(perceptions_model, data_plspm$profession_group)
 
 
-rm(generate_block, perceptions_path_matrix)
+#rm(generate_block, perceptions_path_matrix)

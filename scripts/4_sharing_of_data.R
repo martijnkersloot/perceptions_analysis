@@ -1,5 +1,7 @@
 data_sharing <- data_raw[,2]
 
+data_sharing$profession_group <- data_demographics$profession_group
+
 data_raw$share_methods_sum <-
   data_raw$`share_methods#Yes_using_a_USB_Flash_drive` +
   data_raw$`share_methods#Yes_using_email` +

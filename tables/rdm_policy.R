@@ -12,3 +12,7 @@ table_rdm <- createTable(
 )
 
 export2md(table_rdm)
+
+
+
+export2md(table_rdm, format="latex")

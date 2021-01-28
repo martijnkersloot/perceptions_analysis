@@ -3,6 +3,7 @@ date <- "20210118"
 library(kableExtra)
 library(reshape)
 library(rapportools)
+library(dplyr)
 
 source('scripts/0_helpers.R')
 source('scripts/1_load_data.R')

@@ -21,7 +21,7 @@
 
 perceptions_fit_rho <- as.data.frame(perceptions_model$unidim[,c(2, 4)])
 colnames(perceptions_fit_rho) <- c("mvs", "rho")
-perceptions_fit_rho <- subset(perceptions_fit_rho, perceptions_fit_rho$mvs > 1)
+# perceptions_fit_rho <- subset(perceptions_fit_rho, perceptions_fit_rho$mvs > 1)
 perceptions_fit_rho$rho <- format(perceptions_fit_rho$rho, digits = 3)
 perceptions_fit_rho$variable <- perceptions_structural_model_names[, 1][match(rownames(perceptions_fit_rho), rownames(perceptions_structural_model_names))]
 perceptions_fit_rho <- perceptions_fit_rho[c("variable", "mvs", "rho")]

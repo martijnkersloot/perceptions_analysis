@@ -13,9 +13,12 @@ ggplot(completed_per_source, aes(x=Var1, y=Freq)) +
   theme_classic()
 
 
+data_fair_effort_table_no_other <- subset(data_fair_effort_table, data_fair_effort_table$profession_group != "Other", drop = TRUE)
+rownames(data_fair_effort_table_no_other) <- NULL
 
+levels(data_fair_effort_table_no_other$profession_group) <- c("Other", "Researcher", "Support staff")
 
-ggplot(data_fair_effort_table,
+ggplot(data_fair_effort_table_no_other,
        aes(
          fill = effort,
          y = percentage,
@@ -27,10 +30,11 @@ ggplot(data_fair_effort_table,
   coord_flip() +
   scale_y_continuous(
     breaks = seq(-100, 100, 10),
-    limits = c(-60, 60),
+    limits = c(-70, 70),
     labels = abs(seq(-100, 100, 10))
   ) +
-  labs(title = "Effort spent in making research data FAIR, per FAIR aspect\n", x = "FAIR aspect\n", y = "\nPercentage (%)") +
+  # labs(title = "Effort spent in making research data FAIR, per FAIR aspect\n", x = "FAIR aspect\n", y = "\nPercentage (%)") +
+  labs(x = "FAIR aspect\n", y = "\nPercentage (%)") +
   theme_minimal() +
   geom_hline(yintercept = 0) +
   scale_fill_manual(
@@ -49,4 +53,4 @@ ggplot(data_fair_effort_table,
     position = position_stack(vjust = 0.5, reverse = TRUE),
     size = 2.5,
     color = "white"
-  )
+  ) + facet_wrap(~ profession_group, ncol = 1)

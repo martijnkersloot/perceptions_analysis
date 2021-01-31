@@ -12,6 +12,7 @@ source('scripts/0_preparation/figure_progress.R')
 
 # --------
 # 1. Demographics
+# --------
 source('scripts/1_demographics/0_demographics.R')
 
 source('scripts/1_demographics/table.R')
@@ -31,6 +32,7 @@ source('scripts/2_data-sharing/table.R')
 source('scripts/3_rdm-policy/0_rdm.R')
 
 source('scripts/3_rdm-policy/table.R')
+
 
 # --------
 # 4. Partial Least Squares Path Modeling (PLS-PM)

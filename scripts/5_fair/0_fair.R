@@ -1,5 +1,3 @@
-library(likert)
-
 data_fair <- data_demographics[,1]
 data_fair$identifier <- data_raw$`Survey Instance Id`
 data_fair$knowledge = data_demographics$fair_knowledge
@@ -173,10 +171,7 @@ data_fair_effort_table$rounded <- NA
 
 
 for(group in unique(data_fair_effort_table$profession_group)) {
- print(group) 
-  
   group_subset <- data_fair_effort_table$profession_group == group
-  
   data_fair_effort_table[group_subset,]$percentage <- data_fair_effort_table[group_subset,]$freq / nrow(subset(data_fair_effort, data_fair_effort$profession_group == group)) * 100
 }
 
@@ -186,23 +181,11 @@ data_fair_effort_table$rounded <- abs(round(data_fair_effort_table$percentage))
 # Make percentages negative for 'No'
 data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"] = -data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"]
 
-
-
 #heard_of_fair
 table(data_raw$heard_of_fair)
-
 
 # know_fair_definition
 table(data_raw$know_fair_definition)
 
-
-
 # fair_definition
-
 unique(data_raw$fair_definition)
-
-
-
-
-#rm(trim)
-

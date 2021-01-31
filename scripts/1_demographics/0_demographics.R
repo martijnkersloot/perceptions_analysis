@@ -1,6 +1,3 @@
-library(kableExtra)
-library(compareGroups)
-
 data_demographics <- data_raw[,2]
 
 data_demographics$age <- factor(

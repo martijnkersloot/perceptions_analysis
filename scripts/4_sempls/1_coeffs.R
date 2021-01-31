@@ -1,7 +1,3 @@
-library(reshape)
-library(scales)
-
-
 perceptions_fit_effects <- perceptions_model$effects
 
 # perceptions_fit_path_coefs <- as.data.frame(perceptions_model$path_coefs)

@@ -1,5 +1,3 @@
-library(plspm)
-
 perceptions_path_edgelist <- rbind(
   c("attitude", "intention_to_act"),
   c("awareness", "perceived_usefulness"),

@@ -11,8 +11,6 @@ table_rdm <- createTable(
   show.n = FALSE
 )
 
-export2md(table_rdm)
-
-
-
-export2md(table_rdm, format="latex")
+print(
+  export2md(table_rdm)
+)

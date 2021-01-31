@@ -1,6 +1,3 @@
-#data_scores <- data_scores[, c("Castor Record ID", "fair_knowledge", "profession_group")]
-
-
 data_scores <- data_raw[, c("Castor Record ID", unlist(measurement_model))]
 
 data_scores$fair_knowledge <- data_demographics$fair_knowledge
@@ -51,70 +48,6 @@ table_scores <- createTable(
   all.last = TRUE
 )
 
-
-table_scores <- createTable(
-  compareGroups(
-    fair_knowledge ~ awareness + compatibility + experienced_usefulness + external_influence + 
-      facilitating_conditions + interpersonal_influence + perceived_ease_of_use + perceived_risk +
-      perceived_usefulness + self_efficacy + situational_normality + structural_assurance + 
-      subjective_norm + perceived_behavioral_control + attitude + intention_to_act + 
-      behavior,
-    data_scores
-  ),
-  show.all = TRUE,
-  # show.p.overall = FALSE,
-  all.last = TRUE
-)
-
-export2md(table_scores, header.labels = c(all = "All"))
-
-data_scores_with_umcs <- subset(data_scores, !is.na(data_scores$umc))
-data_scores_with_umcs <- subset(data_scores_with_umcs, data_scores_with_umcs$profession_group != "Other")
-
-data_scores_with_umcs_researchers <- subset(data_scores_with_umcs, data_scores_with_umcs$profession_group == "Researcher")
-
-data_scores_comparison <- data.frame(variable=character(),
-                                         p=numeric()) 
-
-
-for(variable in rownames(perceptions_structural_model_names)) {
-#  test <- kruskal.test(data_scores_with_umcs[, variable] ~ data_scores_with_umcs$umc)
- # test <- kruskal.test(data_scores_with_umcs_researchers[, variable] ~ data_scores_with_umcs_researchers$umc)
-  test <- wilcox.test(data_scores_with_umcs[, variable] ~ data_scores_with_umcs$fair_knowledge)
-  print(test)
-  
-  
-  data_scores_comparison <- rbind(data_scores_comparison, c(variable, test$p.value))
-}
-
-colnames(data_scores_comparison) <- c("variable", "p")
-
-
-data_scores_comparison$p <- as.numeric(data_scores_comparison$p)
-
-data_scores_comparison$p_star <- symnum(
-  data_scores_comparison$p,
-  corr = FALSE,
-  na = FALSE,
-  cutpoints = c(0, 0.001, 0.01, 0.05, 1),
-  symbols = c("***", "**", "*", " ")
-)
-
-data_scores_comparison$p <- scales::pvalue(as.numeric(data_scores_comparison$p))
-
-
-# pairwise.wilcox.test(data_scores_with_umcs_researchers$structural_assurance, data_scores_with_umcs_researchers$umc,
-#                      p.adjust.method = "BH", exact = FALSE)
-# 
-# pairwise.wilcox.test(data_scores_with_umcs$external_influence, data_scores_with_umcs$research_experience,
-#                      p.adjust.method = "BH", exact = FALSE)
-
-
-
-
-
-
-
 data_scores_all <- data_scores
 data_scores_all$experienced_usefulness[is.na(data_scores_all$experienced_usefulness)] <- -1
 #data_scores_all$experienced_usefulness[is.na(data_scores_all$experienced_usefulness)] <- 0
@@ -156,10 +89,6 @@ for(variable in rownames(perceptions_structural_model_names)) {
     sd(temp_scores_no_knowledge_var,na.rm=TRUE),
     test$p.value
   ))
-  
-  #data_demographics_knowledge[, variable]
-  
-  #print(variable)
 }
 
 colnames(table_scores) <-
@@ -212,19 +141,17 @@ table_scores_ave <- table_scores_ave[, c(
   "p"
 )]
 
-options(knitr.table.format = "latex")
-#options(knitr.table.format = "html")
-
-#table_scores_ave$p = cell_spec(table_scores_ave$p,format = "latex", bold = table_scores_ave$p  <= 0.05)
 table_scores_ave$p = cell_spec(table_scores_ave$p, format = "html", bold = table_scores_ave$p  <= 0.05)
 
-kable(table_scores_ave,
-      col.names = c("Variable", "Mean", "SD", "AVE", "Mean", "SD", "Mean", "SD", "p" ),
-      row.names = FALSE,
-      escape = FALSE
-) %>%
-  kable_styling() %>%
-  column_spec(4, border_right = T) %>%
-  column_spec(6, border_right = T) %>%
-  column_spec(8, border_right = T) %>%
-  add_header_above(c(" ", "All researchers" = 3, "Knowledge of FAIR" = 2, "No knowledge of FAIR" = 2, " "))
+print(
+  kable(table_scores_ave,
+        col.names = c("Variable", "Mean", "SD", "AVE", "Mean", "SD", "Mean", "SD", "p" ),
+        row.names = FALSE,
+        escape = FALSE
+  ) %>%
+    kable_styling() %>%
+    column_spec(4, border_right = T) %>%
+    column_spec(6, border_right = T) %>%
+    column_spec(8, border_right = T) %>%
+    add_header_above(c(" ", "All researchers" = 3, "Knowledge of FAIR" = 2, "No knowledge of FAIR" = 2, " "))
+)

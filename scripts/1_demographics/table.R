@@ -15,8 +15,6 @@ table_demographics <- data.frame(variable=character(),
                                  )
 
 for(group in levels(data_demographics$profession_group)) {
-  print(group)
-  
   variable <- "profession_group"
   option <- group
   
@@ -135,20 +133,36 @@ indentation_2 <- which(!is.na(table_demographics$sub_group))
 
 table_demographics$sub_group[is.na(table_demographics$sub_group)] <- table_demographics[is.na(table_demographics$sub_group),]$group
 
-kable(table_demographics[, 3:ncol(table_demographics)],
-      # HTML: col.names = c(" ", "n", "(%)", "n", "(%)", "n", "(%)" ),
-      col.names = c(" ", "n", "(\\%)", "n", "(\\%)", "n", "(\\%)" ),
-      row.names = FALSE,
-      escape = FALSE, booktabs = T
-) %>%
-  kable_styling() %>%
-  pack_rows(index= c(" " = 1,
-                     "Profession" = length(table_demographics$variable[table_demographics$variable == "profession"]) - 1,
-                     "Age" = length(table_demographics$variable[table_demographics$variable == "age"]) - 1,
-                     "Primary Institution" = length(table_demographics$variable[table_demographics$variable == "primary_institution"])  - 1,
-                     "Research experience" = length(table_demographics$variable[table_demographics$variable == "research_experience"]) - 1
-  ), indent=FALSE, bold=FALSE, label_row_css="",latex_gap_space = "0.3em")  %>%
-  add_indent(indentation_1, 1)  %>%
-  add_indent(indentation_2, 2) %>%
-  add_header_above(c(" ", "All" = 2, "Knowledge of FAIR" = 2, "No knowledge of FAIR" = 2))
+print(
+  kable(
+    table_demographics[, 3:ncol(table_demographics)],
+    # HTML: col.names = c(" ", "n", "(%)", "n", "(%)", "n", "(%)" ),
+    col.names = c(" ", "n", "(\\%)", "n", "(\\%)", "n", "(\\%)"),
+    row.names = FALSE,
+    escape = FALSE,
+    booktabs = T
+  ) %>%
+    kable_styling() %>%
+    pack_rows(
+      index = c(
+        " " = 1,
+        "Profession" = length(table_demographics$variable[table_demographics$variable == "profession"]) - 1,
+        "Age" = length(table_demographics$variable[table_demographics$variable == "age"]) - 1,
+        "Primary Institution" = length(table_demographics$variable[table_demographics$variable == "primary_institution"])  - 1,
+        "Research experience" = length(table_demographics$variable[table_demographics$variable == "research_experience"]) - 1
+      ),
+      indent = FALSE,
+      bold = FALSE,
+      label_row_css = "",
+      latex_gap_space = "0.3em"
+    )  %>%
+    add_indent(indentation_1, 1)  %>%
+    add_indent(indentation_2, 2) %>%
+    add_header_above(c(
+      " ",
+      "All" = 2,
+      "Knowledge of FAIR" = 2,
+      "No knowledge of FAIR" = 2
+    ))
   # add_header_above(c(" ", "All researchers" = 3, "Knowledge of FAIR" = 2, "No knowledge of FAIR" = 2, " "))
+)

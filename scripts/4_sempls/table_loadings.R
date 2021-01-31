@@ -10,7 +10,7 @@ colnames(perceptions_fit_loadings) <- c("observed", "variable", "loading", "obse
 
 perceptions_fit_loadings <- subset(perceptions_fit_loadings, perceptions_fit_loadings$loading > 0 & perceptions_fit_loadings$loading < 1.000)
 rownames(perceptions_fit_loadings) <- NULL
-perceptions_fit_loadings$variable <- structural_model_names[, 1][match(perceptions_fit_loadings$variable, rownames(structural_model_names))]
+perceptions_fit_loadings$variable <- perceptions_structural_model_names[, 1][match(perceptions_fit_loadings$variable, rownames(perceptions_structural_model_names))]
 perceptions_fit_loadings <- perceptions_fit_loadings[order(perceptions_fit_loadings$variable, perceptions_fit_loadings$observed_num),]
 rownames(perceptions_fit_loadings) <- NULL
 
@@ -23,9 +23,11 @@ perceptions_fit_loadings$observed_num <- NULL
 # Loadings in bold cells satisfy the prescribed threshold (>= 0.708).
 perceptions_fit_loadings$loading = cell_spec(perceptions_fit_loadings$loading, bold = perceptions_fit_loadings$loading >= 0.708)
 
-kable(perceptions_fit_loadings,
+print(
+  kable(perceptions_fit_loadings,
       col.names = c("Observed variable", "Latent variable", "Loading"),
       row.names = FALSE,
       escape = FALSE
 ) %>%
   kable_styling()
+)

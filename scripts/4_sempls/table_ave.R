@@ -1,10 +1,5 @@
 # Latent variables, mean, sd, and Average Variance Extracted (AVE)
 
-#perceptions_fit_loadings <- as.data.frame(perceptions_fit$)
-
-
-perceptions_fit
-
 perceptions_fit_ave <- as.data.frame(cbind(
   rownames(perceptions_model$inner_summary),
   perceptions_model$inner_summary[,5]
@@ -12,10 +7,6 @@ perceptions_fit_ave <- as.data.frame(cbind(
 
 colnames(perceptions_fit_ave) <- c("variable", "ave")
 perceptions_fit_ave$ave <- format(as.numeric(perceptions_fit_ave$ave), digits = 3)
-
-
-perceptions_model$inner_model
-
 
 #AVE & R2
 perceptions_model$inner_summary[,5]

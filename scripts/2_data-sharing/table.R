@@ -30,18 +30,10 @@ table_sharing_with <- descrTable(
   hide.no = "No", show.n = FALSE
 )
 
-export2md(rbind(
-  "Shares research data" = table_sharing_shares,
-  "Data sharing methods" = table_sharing_method,
-  "Data sharing with" = table_sharing_with
-))
-
-export2md(rbind(
-  "Shares research data" = table_sharing_shares,
-  "Data sharing methods" = table_sharing_method,
-  "Data sharing with" = table_sharing_with
-), format="latex")
-
-
-
-#rm(table_sharing_shares, table_sharing_method, table_sharing_with)
+print(
+  export2md(rbind(
+    "Shares research data" = table_sharing_shares,
+    "Data sharing methods" = table_sharing_method,
+    "Data sharing with" = table_sharing_with
+  ))
+)

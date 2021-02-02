@@ -1,6 +1,7 @@
 data_fair <- data_demographics[,1]
 data_fair$identifier <- data_raw$`Survey Instance Id`
 data_fair$knowledge = data_demographics$fair_knowledge
+data_fair$profession_group <- data_demographics$profession_group
 
 data_fair$effort_fair <- (data_raw$effort_f + data_raw$effort_a + data_raw$effort_i + data_raw$effort_r) > 0
 
@@ -68,72 +69,47 @@ data_fair$letter_a <- tolower(trim(data_raw$fair_word_individual_a))
 data_fair$letter_i <- tolower(trim(data_raw$fair_word_individual_i))
 data_fair$letter_r <- tolower(trim(data_raw$fair_word_individual_r))
 
-data_fair$letter_f_correct <- NA 
-data_fair$letter_a_correct <- NA 
-data_fair$letter_i_correct <- NA 
-data_fair$letter_r_correct <- NA 
-
-fair_letter_f <- c(
-  "findable",
-  "find",
-  "findability",
-  "finding",
-  "finable",
-  "findable, ,"
-)
-
-fair_letter_a <- c(
-  "accessible",
-  "accesible",
-  "accessibility",
-  "accessable",
-  "accesability",
-  "accesable",
-  "accessabil",
-  "accesinle",
-  "assessible",
-  "accesibility"
-)
-
-fair_letter_i <- c(
-  "interoperable",
-  "interoperability",
-  "interopable",
-  "interoperable or something"
-)
-
-fair_letter_r <- c(
-  "reausable",
-  "reusable",
-  "reusing",
-  "re usable",
-  "reusability",
-  "reuse",
-  "re-useable",
-  "reuseable",
-  "re-use ...",
-  "reus",
-  "reuasable"
-)
-
-data_fair[!is.na(data_fair$letter_f),]$letter_f_correct <- data_fair[!is.na(data_fair$letter_f),]$letter_f %in% fair_letter_f
-data_fair[!is.na(data_fair$letter_a),]$letter_a_correct <- data_fair[!is.na(data_fair$letter_a),]$letter_a %in% fair_letter_a
-data_fair[!is.na(data_fair$letter_i),]$letter_i_correct <- data_fair[!is.na(data_fair$letter_i),]$letter_i %in% fair_letter_i
-data_fair[!is.na(data_fair$letter_r),]$letter_r_correct <- data_fair[!is.na(data_fair$letter_r),]$letter_r %in% fair_letter_r
-
 data_fair$description_fair <- tolower(trim(data_raw$fair_definition))
 data_fair$description_f <- tolower(trim(data_raw$fair_description_individual_f))
 data_fair$description_a <- tolower(trim(data_raw$fair_description_individual_a))
 data_fair$description_i <- tolower(trim(data_raw$fair_description_individual_i))
 data_fair$description_r <- tolower(trim(data_raw$fair_description_individual_r))
 
+data_fair_export <- data_fair[, c("identifier", 
+                                  "letter_f", 
+                                  "letter_a", 
+                                  "letter_i", 
+                                  "letter_r", 
+                                  "description_fair",
+                                  "description_f",
+                                  "description_a",
+                                  "description_i",
+                                  "description_r"
+                                  )]
 
-# data_fair[!is.na(data_fair$description_f) & is.na(data_fair$letter_f_correct),]$letter_f_correct <- data_fair[!is.na(data_fair$description_f) & is.na(data_fair$letter_f_correct),]$description_f %in% fair_letter_f
-# data_fair[!is.na(data_fair$description_a) & is.na(data_fair$letter_a_correct),]$letter_a_correct <- data_fair[!is.na(data_fair$description_a) & is.na(data_fair$letter_a_correct),]$description_a %in% fair_letter_a
-# data_fair[!is.na(data_fair$description_i) & is.na(data_fair$letter_i_correct),]$letter_i_correct <- data_fair[!is.na(data_fair$description_i) & is.na(data_fair$letter_i_correct),]$description_i %in% fair_letter_i
-# data_fair[!is.na(data_fair$description_r) & is.na(data_fair$letter_r_correct),]$letter_r_correct <- data_fair[!is.na(data_fair$description_r) & is.na(data_fair$letter_r_correct),]$description_r %in% fair_letter_r
+data_fair_definition_export <- rbind(
+  data.frame(aspect="F", name="Findable", definition = unique(data_fair$letter_f)),
+  data.frame(aspect="A", name="Accessible", definition = unique(data_fair$letter_a)),
+  data.frame(aspect="I", name="Interoperable", definition = unique(data_fair$letter_i)),
+  data.frame(aspect="R", name="Reusable", definition = unique(data_fair$letter_r))
+)
 
-data_fair$profession_group <- data_demographics$profession_group
+data_fair_definition_export <- data_fair_definition_export[!is.na(data_fair_definition_export$definition),]
+write.csv(data_fair_definition_export, file="exports/fair_definitions.csv", row.names=FALSE, na="")
+
+
+data_fair_description_export <- rbind(
+  data.frame(aspect="FAIR", name="FAIR", description = unique(data_fair$description_fair)),
+  data.frame(aspect="F", name="Findable", description = unique(data_fair$description_f)),
+  data.frame(aspect="A", name="Accessible", description = unique(data_fair$description_a)),
+  data.frame(aspect="I", name="Interoperable", description = unique(data_fair$description_i)),
+  data.frame(aspect="R", name="Reusable", description = unique(data_fair$description_r))
+)
+
+data_fair_description_export <- data_fair_description_export[!is.na(data_fair_description_export$description),]
+write.csv(data_fair_description_export, file="exports/fair_description.csv", row.names=FALSE, na="")
+
+
 
 data_fair_effort <- data_fair[, c("Castor Record ID", "effort_f", "effort_a", "effort_i", "effort_r", "profession_group")]
 data_fair_effort <- as.data.frame(data_fair_effort[complete.cases(data_fair_effort), ])
@@ -142,44 +118,6 @@ data_fair_effort <- as.data.frame(data_fair_effort[complete.cases(data_fair_effo
 
 row.names(data_fair_effort) <- data_fair_effort$`Castor Record ID`
 data_fair_effort[1] <- NULL
-
-data_fair_effort_table <- rbind(
-  data.frame(aspect = "F", count = table(data_fair_effort$effort_f, data_fair_effort$profession_group)),
-  data.frame(aspect = "A", count = table(data_fair_effort$effort_a, data_fair_effort$profession_group)),
-  data.frame(aspect = "I", count = table(data_fair_effort$effort_i, data_fair_effort$profession_group)),
-  data.frame(aspect = "R", count = table(data_fair_effort$effort_r, data_fair_effort$profession_group))
-)
-
-
-data_fair_effort_table$aspect <- factor(
-  data_fair_effort_table$aspect,
-  levels = c("F", "A", "I", "R"),
-  labels = c(
-    "Findable",
-    "Accessible",
-    "Interoperable",
-    "Reusable"
-  )
-)
-
-colnames(data_fair_effort_table) <- c("aspect", "effort", "profession_group", "freq")
-#data_fair_effort_table$percentage <- data_fair_effort_table$freq / nrow(data_fair_effort) * 100
-#data_fair_effort_table$rounded <- abs(round(data_fair_effort_table$percentage))
-
-data_fair_effort_table$percentage <- NA
-data_fair_effort_table$rounded <- NA
-
-
-for(group in unique(data_fair_effort_table$profession_group)) {
-  group_subset <- data_fair_effort_table$profession_group == group
-  data_fair_effort_table[group_subset,]$percentage <- data_fair_effort_table[group_subset,]$freq / nrow(subset(data_fair_effort, data_fair_effort$profession_group == group)) * 100
-}
-
-#data_fair_effort_table$percentage <- data_fair_effort_table$freq / nrow(data_fair_effort) * 100
-data_fair_effort_table$rounded <- abs(round(data_fair_effort_table$percentage))
-
-# Make percentages negative for 'No'
-data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"] = -data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at all"]
 
 #heard_of_fair
 table(data_raw$heard_of_fair)

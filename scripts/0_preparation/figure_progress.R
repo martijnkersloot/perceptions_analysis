@@ -2,7 +2,11 @@ print(
   ggplot(completed_per_umc, aes(x = Var1, y = Freq)) +
     geom_bar(stat = "identity", color = "black", fill = "grey") +
     labs(title = "Frequency by UMC\n", x = "\nUMC", y = "Frequency\n") +
-    scale_y_continuous(expand = c(0, 0)) +
+    geom_text(aes(label=Freq), position=position_dodge(width=0.9), vjust=-0.5) +
+    scale_y_continuous(
+      expand = c(0, 0),
+      limits = c(0, round_any(max(completed_per_umc$Freq) * 1.1, 5, f = ceiling))
+    ) +
     theme_classic()
 )
 
@@ -10,7 +14,11 @@ print(
   ggplot(completed_per_source, aes(x = Var1, y = Freq)) +
     geom_bar(stat = "identity", color = "black", fill = "grey") +
     labs(title = "Frequency by source\n", x = "\nSource", y = "Frequency\n") +
-    scale_y_continuous(expand = c(0, 0)) +
+    geom_text(aes(label=Freq), position=position_dodge(width=0.9), vjust=-0.5) +
+    scale_y_continuous(
+      expand = c(0, 0),
+      limits = c(0, round_any(max(completed_per_source$Freq) * 1.1, 5, f = ceiling))
+    ) +
     theme_classic()
 )
 

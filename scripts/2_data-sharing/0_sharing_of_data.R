@@ -20,7 +20,7 @@ data_raw$shared_yn[data_raw$share_methods_sum > 0] <- 1
 # Exclude don't know / not sure
 data_raw$shared_yn[data_raw$`share_methods#Dont_knowNot_sure` == 1] <- NA
 
-# data_raw$shared_yn[data_raw$`share_methods#Dont_knowNot_sure` == 1] <- 99
+data_raw$shared_yn[data_raw$`share_methods#Dont_knowNot_sure` == 1] <- 99
 
 data_sharing$shared <- factor(
   data_raw$shared_yn,

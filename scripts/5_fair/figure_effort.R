@@ -1,3 +1,6 @@
+library(gridExtra)
+library(gtable)
+
 data_fair_effort_table <- rbind(
   data.frame(aspect = "F", count = table(data_fair_effort$effort_f, data_fair_effort$profession_group)),
   data.frame(aspect = "A", count = table(data_fair_effort$effort_a, data_fair_effort$profession_group)),
@@ -38,9 +41,16 @@ data_fair_effort_table$percentage[data_fair_effort_table$effort == "No, not at a
 data_fair_effort_table_no_other <- subset(data_fair_effort_table, data_fair_effort_table$profession_group != "Other", drop = TRUE)
 rownames(data_fair_effort_table_no_other) <- NULL
 
-print(
-  ggplot(
-    data_fair_effort_table_no_other,
+levels(data_fair_effort_table_no_other$profession_group) <- c("Researchers", "Research support staff", "Other")
+
+xs <- split(data_fair_effort_table_no_other,f = data_fair_effort_table_no_other$profession_group)
+
+figure_y_labels <-  paste0(abs(seq(-100, 100, 10)), "%")
+figure_y_labels[c(FALSE, TRUE)] <- ""
+
+
+plot_effort_researcher <- ggplot(
+    xs$Researcher,
     aes(
       fill = effort,
       y = percentage,
@@ -55,12 +65,12 @@ print(
     coord_flip() +
     scale_y_continuous(
       breaks = seq(-100, 100, 10),
-      limits = c(-70, 70),
-      labels = abs(seq(-100, 100, 10))
+      limits = c(-55, 75),
+      labels = figure_y_labels
     ) +
     # labs(title = "Effort spent in making research data FAIR, per FAIR aspect\n", x = "FAIR aspect\n", y = "\nPercentage (%)") +
     labs(x = "FAIR aspect\n", y = "\nPercentage (%)") +
-    theme_minimal() +
+    # theme_minimal() +
     geom_hline(yintercept = 0) +
     scale_fill_manual(
       name = "Effort",
@@ -71,12 +81,40 @@ print(
       legend.position = "bottom",
       legend.box = "vertical",
       axis.title.y = element_blank(),
-      legend.title = element_blank()
+      axis.title.x = element_blank(),
+      # axis.title.x = element_text(size=9.5),
+      legend.title = element_blank(),
+      panel.border = element_rect(colour = "gray", fill=NA, size=1),
+      panel.background = element_blank(), 
+      panel.grid = element_blank(),
+      panel.spacing.x = unit(2,"line")
+    ) +
+    geom_shadowtext(
+      aes(label = paste0(rounded, "%")),
+      position = position_stack(vjust = 0.5, reverse = TRUE),
+      size = 2.5,
+      color = "white",
+      bg.r = 0.1,
+      alpha = 0.1
     ) +
     geom_text(
       aes(label = paste0(rounded, "%")),
       position = position_stack(vjust = 0.5, reverse = TRUE),
       size = 2.5,
       color = "white"
-    ) + facet_wrap( ~ profession_group, ncol = 1)
-)
+    ) + facet_wrap( ~ profession_group, ncol = 2)
+
+legend = gtable_filter(ggplot_gtable(ggplot_build(plot_effort_researcher)), "guide-box")
+
+plot_effort_researcher <- plot_effort_researcher + theme(legend.position="none")
+
+plot_effort_support <- plot_effort_researcher %+% xs$`Research support staff` + scale_x_discrete(position = "top")
+
+plot_effort_researcher <- plot_effort_researcher + theme(plot.margin = unit(c(0, .75, 0, 0), "cm"))
+plot_effort_support <- plot_effort_support + theme(plot.margin = unit(c(0, 0, 0, .75), "cm"))
+
+grid.arrange(arrangeGrob(plot_effort_researcher, plot_effort_support, ncol = 2),
+             legend,
+             heights=c(1.1, 0.2))
+
+

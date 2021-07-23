@@ -19,3 +19,4 @@ perceptions_fit_r2 <- as.data.frame(cbind(
   rownames(perceptions_model$inner_summary),
   format(as.numeric(perceptions_model$inner_summary[,2]), digits = 2)
 ))
+

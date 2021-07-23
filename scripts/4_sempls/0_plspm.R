@@ -119,8 +119,8 @@ data_plspm$profession_group <- data_demographics$profession_group
 
 data_plspm <- as.data.frame(subset(data_plspm, data_raw$`Survey Progress` == 100))
 
-# Only include researchers & support
-data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group != "Other"))
+# Only include researchers
+#data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group != "Other"))
 
 data_plspm <- as.data.frame(subset(data_plspm, data_plspm$profession_group == "Researcher"))
 
@@ -137,7 +137,58 @@ perceptions_model <- plspm(data_plspm, perceptions_path_matrix, measurement_mode
 summary(perceptions_model)
 
 data_plspm$profession_group <- factor(data_plspm$profession_group)
-plspm.groups(perceptions_model, data_plspm$profession_group)
+#plspm.groups(perceptions_model, data_plspm$profession_group, reps=50)
+plspm.groups(perceptions_model, data_plspm$profession_group, method="permutation")
+
+# plspm.groups(perceptions_model, data_plspm$fair_knowledge)
+
+perceptions_cor <- cor(data_plspm[,2:60])
+all_observed <- colnames(data_plspm[,2:60])
+
+data_plspm_raw <- data_plspm[,2:60]
 
 
 #rm(generate_block, perceptions_path_matrix)
+
+htmt <- data.frame(latent1=character(),
+                   latent2=character(),
+                   htmt=numeric()
+)
+
+
+for(latent1 in measurement_model) {
+  #print (latent1)
+  name1 <- strsplit(latent1[1], "_")[[1]][1]
+  
+  cor_monotrait1 <- cor(data_plspm_raw[, latent1], data_plspm_raw[, latent1])
+  
+  htmt <- rbind(htmt, c(
+    name1, 
+    name1,
+    NA
+  ))
+  
+  for(latent2 in measurement_model) {
+    name2 <- strsplit(latent2[1], "_")[[1]][1]
+    
+    if(name1 != name2) {
+      cor_monotrait2 <- cor(data_plspm_raw[, latent2], data_plspm_raw[, latent2])
+      
+      cor_heterotrait <- cor(data_plspm_raw[, latent1], data_plspm_raw[, latent2])
+      
+      
+      htmt <- rbind(htmt, c(
+        name1, 
+        name2,
+        mean(cor_heterotrait) / sqrt(mean(cor_monotrait1) * mean(cor_monotrait2))
+      ))
+    }
+  }
+}
+
+colnames(htmt) <- c("latent1", "latent2", "htmt")
+
+htmt$htmt <- formatC(as.numeric(htmt$htmt), digits = 3)
+htmt <- htmt[order(htmt$latent1, htmt$latent2),]
+
+htmt_final <- pivot_wider(htmt, names_from = latent2, values_from = htmt)

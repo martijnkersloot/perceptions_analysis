@@ -1,4 +1,4 @@
-date <- "20210201"
+date <- "20210226"
 
 # --------
 # 0. Data preparation
@@ -51,11 +51,18 @@ source('scripts/4_sempls/table_loadings.R')
 # --------
 source('scripts/5_fair/0_fair.R')
 source('scripts/5_fair/1_scores.R')
+source('scripts/5_fair/2_scores_individual.R')
+source('scripts/5_fair/3_scores_researchers.R')
 
 source('scripts/5_fair/figure_effort.R')
 
+source('scripts/5_fair/figure_selfefficacy.R')
 
 # --------
 # 9. Contact for future research (emails)
 # --------
 source('scripts/9_future-research/0_emails.R')
+
+
+per_source <- as.data.frame(table(data_raw$institute))
+

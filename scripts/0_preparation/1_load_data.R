@@ -7,3 +7,6 @@ data_raw$institute <- substr(data_raw$`Castor Record ID`, 4, nchar(data_raw$`Cas
 comments <- subset(data_raw, !is.na(data_raw$comments), select=c("Castor Record ID", "Survey Creation Date", "comments"))
 
 rm(date, file)
+
+
+data_raw <- subset(data_raw, data_raw$`Survey Progress` == 100)

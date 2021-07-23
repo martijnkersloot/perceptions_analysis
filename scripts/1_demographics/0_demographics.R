@@ -83,6 +83,9 @@ data_demographics$research_experience <- factor(
 data_demographics$fair_knowledge <- NA
 
 # No if : Don't know definition/description / Not heard of FAIR 
+data_demographics$heard_of_fair <- data_raw$heard_of_fair
+data_demographics$know_fair_definition <- data_raw$know_fair_definition
+
 data_demographics$fair_knowledge[data_raw$heard_of_fair == 0] <- 0
 data_demographics$fair_knowledge[data_raw$know_fair_definition == 0] <- 0
 
@@ -124,6 +127,14 @@ data_demographics_assistant <- grepl("research-assistant", gsub("\\s", "", tolow
 data_demographics_junior <- grepl("juniorresearcher", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
 data_demographics_manager <- grepl("trialmanager", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
 
+
+#Research Associate
+data_demographics_researchassociate <- grepl("researchassociate", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+
+#Clinician Scientist
+data_demographics_clinicalscientist <- grepl("clinicianscientist", gsub("\\s", "", tolower(data_demographics$profession_other)), fixed = TRUE)
+
+
 data_demographics$profession[data_demographics_data_managers] <- "Other: Data Manager"
 data_demographics$profession[data_demographics_phd] <- "PhD candidate"
 
@@ -134,6 +145,8 @@ data_demographics$profession_group <- NA
 data_demographics$profession_group[data_demographics$profession %in% profession_group_support] <- "Support"
 data_demographics$profession_group[data_demographics$profession %in% profession_group_researcher] <- "Researcher"
 data_demographics$profession_group[data_demographics_junior] <- "Researcher"
+data_demographics$profession_group[data_demographics_researchassociate] <- "Researcher"
+data_demographics$profession_group[data_demographics_clinicalscientist] <- "Researcher"
 data_demographics$profession_group[data_demographics_consultant] <- "Support"
 data_demographics$profession_group[data_demographics_coordinator] <- "Support"
 data_demographics$profession_group[data_demographics_assistant] <- "Support"
@@ -162,3 +175,6 @@ attr(data_demographics$profession_group, "label") <- "Profession group"
 
 data_demographics_no_na <- subset(data_demographics, !is.na(data_demographics$fair_knowledge))
 
+
+
+#data_demographics <- subset(data_demographics, data_raw$`Survey Progress` == 100)

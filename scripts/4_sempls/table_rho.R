@@ -10,11 +10,13 @@ perceptions_fit_rho <- perceptions_fit_rho[c("variable", "mvs", "rho")]
 rownames(perceptions_fit_rho) <- NULL
 
 perceptions_fit_rho <- perceptions_fit_rho[order(perceptions_fit_rho$rho, decreasing=TRUE),]
-
+perceptions_fit_rho <- perceptions_fit_rho[order(perceptions_fit_rho$variable),]
+perceptions_fit_rho <- subset(perceptions_fit_rho, perceptions_fit_rho$mvs > 1)
 print(
   kable(perceptions_fit_rho,
         col.names = c("", "# of observed variables", "Dillon-Goldstein’s rho"),
-        row.names = FALSE
+        row.names = FALSE,
+        # format="latex", booktabs = T
   ) %>%
     kable_styling()
 )

@@ -37,6 +37,6 @@ attr(data_rdm$policy_contact, "label") <- "Who to contact regarding RDM policy"
 attr(data_rdm$policy_fair, "label") <- "FAIR"
 
 data_rdm$profession_group <- data_demographics$profession_group
-data_rdm <- subset(data_rdm, data_rdm$profession_group == "Researcher")
-data_rdm <- as.data.frame(data_rdm[complete.cases(data_rdm), ])
+data_rdm <- subset(data_rdm, data_rdm$profession_group != "Other")
+#data_rdm <- as.data.frame(data_rdm[complete.cases(data_rdm), ])
 

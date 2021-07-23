@@ -9,9 +9,9 @@ table_demographics <- data.frame(variable=character(),
                                  all_n=numeric(),
                                  all_p=numeric(),
                                  knowledge_n=numeric(),
-                                 knowledge_p=numeric(),
+                                 knowledge_p=character(),
                                  no_knowledge_n=numeric(),
-                                 no_knowledge_p=numeric()
+                                 no_knowledge_p=character()
                                  )
 
 for(group in levels(data_demographics$profession_group)) {
@@ -31,9 +31,9 @@ for(group in levels(data_demographics$profession_group)) {
     all_n,
     all_n / nrow(data_demographics),
     knowledge_n,
-    knowledge_n / nrow(data_demographics),
+    knowledge_n / nrow(data_demographics_knowledge),
     no_knowledge_n,
-    no_knowledge_n / nrow(data_demographics)
+    no_knowledge_n / nrow(data_demographics_no_knowledge)
   ))
   
   if(group != "Other") {
@@ -62,9 +62,9 @@ for(group in levels(data_demographics$profession_group)) {
         all_n,
         all_n / nrow(data_demographics),
         knowledge_n,
-        knowledge_n / nrow(data_demographics),
+        knowledge_n / nrow(data_demographics_knowledge),
         no_knowledge_n,
-        no_knowledge_n / nrow(data_demographics)
+        no_knowledge_n / nrow(data_demographics_no_knowledge)
       ))
     }
   }
@@ -86,9 +86,9 @@ for(variable in c("age", "primary_institution", "research_experience")) {
         all_n,
         all_n / nrow(data_demographics),
         knowledge_n,
-        knowledge_n / nrow(data_demographics),
+        knowledge_n / nrow(data_demographics_knowledge),
         no_knowledge_n,
-        no_knowledge_n / nrow(data_demographics)
+        no_knowledge_n / nrow(data_demographics_no_knowledge)
       ))
     }
   }
@@ -118,9 +118,9 @@ colnames(table_demographics) <- c(
   "no_knowledge_p"
 )
 
-table_demographics$all_p <- format(as.numeric(table_demographics$all_p) * 100, digits = 1, trim=TRUE)
-table_demographics$knowledge_p <- format(as.numeric(table_demographics$knowledge_p) * 100, digits = 1, trim=TRUE)
-table_demographics$no_knowledge_p <- format(as.numeric(table_demographics$no_knowledge_p) * 100, digits = 1, trim=TRUE)
+table_demographics$all_p <- format(as.numeric(table_demographics$all_p) * 100, digits = 2, trim=TRUE)
+table_demographics$knowledge_p <- format(as.numeric(table_demographics$knowledge_p) * 100, digits = 3, trim=TRUE)
+table_demographics$no_knowledge_p <- format(as.numeric(table_demographics$no_knowledge_p) * 100, digits = 2, trim=TRUE)
 
 table_demographics$all_p <- paste("(", table_demographics$all_p, ")", sep="")
 table_demographics$knowledge_p <- paste("(", table_demographics$knowledge_p, ")", sep="")
@@ -138,6 +138,7 @@ print(
     table_demographics[, 3:ncol(table_demographics)],
     # HTML: col.names = c(" ", "n", "(%)", "n", "(%)", "n", "(%)" ),
     col.names = c(" ", "n", "(\\%)", "n", "(\\%)", "n", "(\\%)"),
+    format="html",
     row.names = FALSE,
     escape = FALSE,
     booktabs = T

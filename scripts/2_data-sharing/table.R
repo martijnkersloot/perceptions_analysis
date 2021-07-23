@@ -2,6 +2,11 @@
 
 data_sharing_researchers <- subset(data_sharing, data_sharing$profession_group == "Researcher")
 
+table(data_sharing_researchers$method_data_repository_external, data_sharing_researchers$method_data_repository_organization)
+table(data_sharing_researchers$method_standalone, data_sharing_researchers$method_appendix)
+
+table(data_sharing_researchers$with_personally, data_sharing_researchers$with_not_personally)
+
 table_sharing_shares <- descrTable( ~ shared,
                                     data_sharing_researchers,
                              hide.no = "No", show.n = FALSE)
@@ -35,5 +40,5 @@ print(
     "Shares research data" = table_sharing_shares,
     "Data sharing methods" = table_sharing_method,
     "Data sharing with" = table_sharing_with
-  ))
+  ), format="latex")
 )

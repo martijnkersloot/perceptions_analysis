@@ -10,6 +10,7 @@ library(plspm)
 library(reshape)
 library(scales)
 library(likert)
+library(tidyr)
 
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
